@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Uno.IconFontUpdater": {
+      "commandName": "Project",
+      "commandLineArgs": "-r \"C:\\Dev\\uno2\" -t \"C:\\Users\\marti\\Downloads\\Symbols-August29\\fonts\\Symbols.ttf\" -w \"C:\\Users\\marti\\Downloads\\Symbols-August29\\fonts\\Symbols.woff\""
+    }
+  }
+}
