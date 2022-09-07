@@ -4,8 +4,8 @@ using System.Text.RegularExpressions;
 using Uno.IconFontUpdater;
 
 const string IconFontName = "uno-fluentui-assets.ttf";
-const string CssFontRegex = @"(font-family: ""Symbols"";[^\}]*src:)(.*format\('woff'\);)";
-const string CssFontFormatString = "url(data:application/x-font-woff;charset=utf-8;base64,{0}) format('woff');";
+const string CssFontRegex = @"(font-family: ""Symbols"";[^\}]*src:)(.*format\('woff2?'\);)";
+const string CssFontFormatString = "url(data:application/x-font-woff;charset=utf-8;base64,{0}) format('woff2');";
 
 var parseResult = Parser.Default.ParseArguments<CommandOptions>(args);
 if (parseResult.Errors.Any() || parseResult.Value is null)
@@ -40,7 +40,7 @@ void UpdateDirectory(DirectoryInfo directory)
         UpdateDirectory(subDirectory);
     }
 }
-                
+
 void ReplaceIconFontFile(string iconFontFilePath)
 {
     File.Copy(options.TtfPath, iconFontFilePath, true);
@@ -48,8 +48,8 @@ void ReplaceIconFontFile(string iconFontFilePath)
 
 string CreateWoffCssDeclaration()
 {
-    var bytes = File.ReadAllBytes(options.WoffPath);
-    var base64FontData =System.Convert.ToBase64String(bytes);
+    var bytes = File.ReadAllBytes(options.Woff2Path);
+    var base64FontData = System.Convert.ToBase64String(bytes);
     return string.Format(CssFontFormatString, base64FontData);
 }
 
@@ -58,6 +58,7 @@ void ReplaceCssFont(string cssFilePath)
     var fileContent = File.ReadAllText(cssFilePath);
     if (Regex.IsMatch(fileContent, CssFontRegex))
     {
+        Console.WriteLine($"Updating {cssFilePath}");
         fileContent = Regex.Replace(fileContent, CssFontRegex, m => m.Groups[1].Value + cssFontDeclaration);
         File.WriteAllText(cssFilePath, fileContent);
     }
